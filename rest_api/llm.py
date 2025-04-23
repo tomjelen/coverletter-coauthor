@@ -11,6 +11,10 @@ Output should be in markdown format, with clear sections for introduction, body,
 """
 
 
+class LLMError(Exception):
+    pass
+
+
 class LLM:
     def __init__(self, openai_api_key: str):
         self.client = AsyncOpenAI(api_key=openai_api_key)
@@ -23,13 +27,23 @@ class LLM:
         {job_description}
         """
 
-        completion = await self.client.chat.completions.create(
-            model="gpt-4.1-nano",
-            messages=[
-                {"role": "developer", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_prompt},
-            ],
-        )
+        try:
+            completion = await self.client.chat.completions.create(
+                model="gpt-4.1-nano",
+                messages=[
+                    {"role": "developer", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ],
+            )
+        except Exception as e:
+            # TODO: Look deeper in the documentation to find the right exceptions.
+            # I'm sure I can tell difference between 400-like and 500-like errors
+            # and handle them differently further up.
+            raise LLMError(f"Error when calling OpenAI API") from e
 
-        # FIXME: Uh, hello! Read docs and deal with errors here and the above line.
+        if not completion.choices:
+            raise LLMError("No choices returned from OpenAI API")
+        if not completion.choices[0].message.content:
+            raise LLMError("No content returned from OpenAI API")
+
         return completion.choices[0].message.content

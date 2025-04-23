@@ -1,14 +1,16 @@
 from functools import lru_cache
+import logging
 from typing import Annotated
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
 from rest_api.config import Settings
-from rest_api.llm import LLM
+from rest_api.llm import LLM, LLMError
 
 app = FastAPI()
+logger = logging.getLogger(__name__)
 
 
 # == Contracts
@@ -42,10 +44,18 @@ async def generate_cover_letter(
     request: CoverLetterRequest,
     llm: Annotated[LLM, Depends(get_llm)],
 ):
-    cover_letter_markdown = await llm.generate_coverletter(
-        request.job_description,
-        request.applicant_name,
-    )
+    try:
+        cover_letter_markdown = await llm.generate_coverletter(
+            request.job_description,
+            request.applicant_name,
+        )
+    except LLMError:
+        logger.exception("LLM error occurred")
+
+        raise HTTPException(
+            status_code=503,
+            detail="Unable to generate cover letter due to AI service error",
+        )
 
     return CoverLetterResponse(
         cover_letter_markdown=cover_letter_markdown,

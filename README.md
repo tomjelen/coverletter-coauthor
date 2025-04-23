@@ -20,7 +20,6 @@ Run the rest service with `make serve-dev` and access the endpoint in your brows
 
 ## Parking lot
 
-- Error handling when interacting with the model
 - Dockerization with production setup
 - Dependency locking
 - Think about CORS, auth, etc. Depending on how the API is to be used and deployed.

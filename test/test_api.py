@@ -3,7 +3,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from rest_api.api import app, get_llm
-from rest_api.llm import LLM
+from rest_api.llm import LLM, LLMError
 
 
 @pytest.fixture
@@ -52,3 +52,18 @@ def test_generate_prompts_llm(client, mock_llm):
         "JOB DESCRIPTION", "APPLICANT NAME"
     )
     assert response.json()["cover_letter_markdown"] == "GENERATED COVER LETTER"
+
+
+def test_generate_503_on_llm_errors(client, mock_llm):
+    """Test the coverletters/generate endpoint returns 503 on LLM errors."""
+    mock_llm.generate_coverletter.side_effect = LLMError("LLM error")
+
+    response = client.post(
+        "coverletters/generate",
+        json={
+            "job_description": "JD",
+            "applicant_name": "John Doe",
+        },
+    )
+
+    assert response.status_code == 503
