@@ -1,4 +1,7 @@
-fastapi[standard]
+fastapi[all]
+openai
+
+# Testing
+httpx
 pytest
 pytest-watch
-httpx

@@ -27,3 +27,9 @@ After / parking lot:
 ## Assumptions
 
 - Developed and executed under linux with python3 and make installed
+
+## Getting started
+
+1. Add a `.env`-file with an `OPENAI_API_KEY` entry
+1. Run `make serve-dev` to start the application
+1. Run `make test` to execute the unit-tests
