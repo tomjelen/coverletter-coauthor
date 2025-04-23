@@ -22,3 +22,7 @@ After / parking lot:
 - Generate questionaire based on CV and JD
 - Abstract model interface to make it possible to change it
 - Basic throttling on the model usage
+
+## Assumptions
+
+- Developed and executed under linux with python3 and make installed
