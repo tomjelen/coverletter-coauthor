@@ -1,28 +1,10 @@
 # Cover letter co-author
 
-## Initial thoughts
+A rest service with a single endpoint `coverletters/generate` that uses the `gpt-4.1-nano` from OpenAI to generate coverletters.
 
-First iteration:
+The endpoint accepts a job-description and a applicant-name. The response contains the coverletter as markdown text.
 
-- Basic FastAPI app with a endpoint
-  - Request: job description + applicant-name
-  - Response: bunch of text
-- Select any remote model, claude or openai?
-- Get testing going
-- Ugh, fileuploads -> multiform + post. Try avoid it yes?
-- Use the /docs endpoint as UI or a very basic terminal client
-
-After / parking lot:
-
-- Error handling when interacting with the model
-- Dockerize
-- Dependency locking
-- Think about CORS, auth, etc
-- CV instead of applicant name
-- Generate questionaire based on CV and JD
-- Abstract model interface to make it possible to change it
-- Basic throttling on the model usage
-- snake_casing vs camelCasing.. It is apparently still a thing in FastAPI. Investigate pydantic stuff
+Run the rest service with `make serve-dev` and access the endpoint in your browser to test it with the served Swagger-UI. Alternatively use the `demo.ipynb`-notebook.
 
 ## Assumptions
 
@@ -31,5 +13,18 @@ After / parking lot:
 ## Getting started
 
 1. Add a `.env`-file with an `OPENAI_API_KEY` entry
-1. Run `make serve-dev` to start the application
 1. Run `make test` to execute the unit-tests
+1. Run `make serve-dev` to start the application
+1. Open `http://127.0.0.1:55446` in a browser
+
+
+## Parking lot
+
+- Error handling when interacting with the model
+- Dockerization with production setup
+- Dependency locking
+- Think about CORS, auth, etc. Depending on how the API is to be used and deployed.
+- Use a CV instead of applicant-name/specific fields
+- Additional endpoint to generate questionaire based on CV and JD. This additional info could be supplied in `coverletters/generate`.
+- Abstract model interface so that you can also run against a local llm
+- snake_casing vs camelCasing.. It is apparently still a thing in FastAPI. Investigate pydantic stuff
