@@ -22,6 +22,7 @@ After / parking lot:
 - Generate questionaire based on CV and JD
 - Abstract model interface to make it possible to change it
 - Basic throttling on the model usage
+- snake_casing vs camelCasing.. It is apparently still a thing in FastAPI. Investigate pydantic stuff
 
 ## Assumptions
 
