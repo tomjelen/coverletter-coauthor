@@ -8,7 +8,7 @@ test: venv
 	venv/bin/pytest
 
 serve-dev: venv
-	venv/bin/fastapi dev rest_api/api.py
+	venv/bin/fastapi dev rest_api/api.py --port 55446
 
 clean:
 	rm -rf venv
